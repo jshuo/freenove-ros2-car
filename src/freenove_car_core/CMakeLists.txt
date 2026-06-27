@@ -12,6 +12,24 @@ find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(freenove_car_msgs REQUIRED)
 
+# ==================== LeetCode Algorithm Library ====================
+add_library(car_leetcode_algo
+  src/leetcode/safe_path.cpp
+  src/leetcode/perfect_measurement.cpp
+  src/leetcode/obstacle_ahead.cpp
+  src/leetcode/detect_objects.cpp
+  src/leetcode/variable_sliding_window.cpp
+  src/leetcode/binary_search.cpp
+  src/leetcode/prefix_sum_hashing.cpp
+  src/leetcode/top_k_heap.cpp
+  src/leetcode/sensor_pattern.cpp
+  src/leetcode/path_history.cpp
+)
+target_include_directories(car_leetcode_algo PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+target_compile_features(car_leetcode_algo PUBLIC cxx_std_14)
+
 # ==================== Hardware Library ====================
 add_library(freenove_car_hw
   src/pca9685.cpp
@@ -60,10 +78,20 @@ target_include_directories(camera_node PRIVATE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 
+# ==== ROS 2 Node: LeetCode algorithm debug / validation ====
+add_executable(leetcode_node src/leetcode_node.cpp)
+target_link_libraries(leetcode_node car_leetcode_algo)
+ament_target_dependencies(leetcode_node rclcpp std_msgs freenove_car_msgs)
+target_include_directories(leetcode_node PRIVATE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+
 # ==================== Install ====================
 install(TARGETS
   freenove_car_hw
+  car_leetcode_algo
   base_node sensor_node actuator_node camera_node
+  leetcode_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
