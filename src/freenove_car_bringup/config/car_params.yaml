@@ -1,0 +1,13 @@
+/**:
+  ros__parameters:
+    simulate: false
+    i2c_address: 64          # 0x40
+    max_duty: 4095
+    servo_channels: 2
+    ultrasonic_enable: true
+    infrared_enable: true
+    light_enable: true
+    battery_enable: true
+    pcb_version: 1
+    buzzer_enable: true
+    led_enable: true
